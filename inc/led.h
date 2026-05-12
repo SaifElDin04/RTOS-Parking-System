@@ -1,7 +1,5 @@
 /*
- * led.h — LED control function prototypes
- * Smart Parking Garage Gate System
- * TM4C123GH6PM + FreeRTOS
+LED control function prototypes
  */
 
 #ifndef LED_H

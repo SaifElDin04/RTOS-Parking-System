@@ -1,7 +1,5 @@
 /*
- * config.h — Hardware pin mapping and system-wide constants
- * Smart Parking Garage Gate System
- * TM4C123GH6PM + FreeRTOS
+Hardware pin mapping and system-wide constants
  */
 
 #ifndef CONFIG_H
@@ -47,9 +45,7 @@
 
 /* =========================================================================
  * MANUAL_THRESHOLD_MS — tap-vs-hold boundary (milliseconds).
- * Button released in  < this value -> one-touch auto mode (gate runs to limit).
- * Button released in >= this value -> manual mode (gate stops on release).
  * ========================================================================= */
 #define MANUAL_THRESHOLD_MS  5000U
 
-#endif /* CONFIG_H */
+#endif 

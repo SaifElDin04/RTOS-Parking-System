@@ -1,7 +1,5 @@
 /*
- * hardware.h — GPIO initialisation prototype
- * Smart Parking Garage Gate System
- * TM4C123GH6PM + FreeRTOS
+GPIO initialisation prototype
  */
 
 #ifndef HARDWARE_H
@@ -9,4 +7,4 @@
 
 void Hardware_Init(void);
 
-#endif /* HARDWARE_H */
+#endif 

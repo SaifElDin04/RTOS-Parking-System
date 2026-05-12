@@ -1,9 +1,4 @@
 /*
- * buttons.h — Button read helpers (inline)
- * Smart Parking Garage Gate System
- * TM4C123GH6PM + FreeRTOS
- *
- * POLARITY SUMMARY:
  *   Port E (PE0-PE3) — pull-DOWN, active-HIGH: pressed when bit != 0
  *   Port D (PD0-PD2) — pull-DOWN, active-HIGH: pressed when bit != 0
  *   Port F SW1 (PF4) — pull-UP,   active-LOW:  pressed when bit == 0
