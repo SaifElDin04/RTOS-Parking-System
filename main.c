@@ -11,9 +11,6 @@
 #include "task_safety.h"
 #include "task_status.h"
 
-
-
-/* Called if a task overflows its stack — halt so you can catch it */
 void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
 {
     (void)xTask;
@@ -23,38 +20,35 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
     for (;;) {}
 }
 
-/* Called by the idle task hook — leave empty if nothing to do */
-void vApplicationIdleHook(void)
-{
-    /* nothing */
-}
-
 
 int main(void)
 {
-    /* TODO: Step 1 — Call Hardware_Init() */
-
+    Hardware_Init();
     vPrintString("\n=== Smart Parking Gate System Starting ===\n");
 
-    /* TODO: Step 2 — Create RTOS primitives and assign to global handles:
-     *
-     *   xButtonQueue    = xQueueCreate(20, sizeof(ButtonEvent_t));
-     *   xOpenLimitSem   = xSemaphoreCreateBinary();
-     *   xClosedLimitSem = xSemaphoreCreateBinary();
-     *   xObstacleSem    = xSemaphoreCreateBinary();
-     *   xGateStateMutex = xSemaphoreCreateMutex();
-     *
-     *   Then assert each is not NULL with configASSERT()
-     */
+    /* Create RTOS primitives */
+    xButtonQueue    = xQueueCreate(20, sizeof(ButtonEvent_t)); /* TC-19 */
+    xOpenLimitSem   = xSemaphoreCreateBinary();                /* TC-21 */
+    xClosedLimitSem = xSemaphoreCreateBinary();                /* TC-21 */
+    xObstacleSem    = xSemaphoreCreateBinary();                /* TC-07, TC-21 */
+    xGateStateMutex = xSemaphoreCreateMutex();                 /* TC-20 */
+
+    configASSERT(xButtonQueue    != NULL);
+    configASSERT(xOpenLimitSem   != NULL);
+    configASSERT(xClosedLimitSem != NULL);
+    configASSERT(xObstacleSem    != NULL);
+    configASSERT(xGateStateMutex != NULL);
 
     vPrintString("RTOS primitives created\n");
 
-    /* TODO: Step 3 — Create all tasks: */
+    xTaskCreate(vSafetyTask,      "Safety",   256, NULL, 4, NULL);
+    xTaskCreate(vInputTask,       "Input",    256, NULL, 3, NULL);
+    xTaskCreate(vGateControlTask, "GateCtrl", 512, NULL, 2, NULL);
+    xTaskCreate(vLEDControlTask,  "LED",      128, NULL, 2, NULL);
+    xTaskCreate(vStatusTask,      "Status",   256, NULL, 1, NULL);
 
     vPrintString("All tasks created — starting scheduler\n");
+    vTaskStartScheduler();
 
-
-    vTaskStartScheduler()
-
-    for (;;) {}   /* never reached */
+    for (;;) {}
 }

@@ -1,15 +1,3 @@
-/*
- * task_input.c — Input Task  (Priority 3 — High)
- * Smart Parking Garage Gate System
- * TM4C123GH6PM + FreeRTOS
- *
- * Polls all buttons every 20 ms (debounce window).
- * Detects rising edges (press) and falling edges (release).
- * Sends ButtonEvent_t to xButtonQueue for GateControl to process.
- * Also gives binary semaphores for limit/obstacle so Safety Task and
- * GateControl can react to them immediately (TC-21).
- */
-
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -26,7 +14,7 @@ void vInputTask(void *pvParameters)
     /*allow pull resistors to settle before snapshotting idle state */
     vTaskDelay(pdMS_TO_TICKS(10));
 
-    /*seed prev* from real pin state — polarity handled by Btn_*() */
+    /*polarity handled by Btn_*() */
     bool prevDrvOpen   = Btn_DriverOpen();
     bool prevDrvClose  = Btn_DriverClose();
     bool prevSecOpen   = Btn_SecOpen();
@@ -68,12 +56,12 @@ void vInputTask(void *pvParameters)
         if (curOpenLim && !prevOpenLim) {
             evt = EVT_OPEN_LIMIT;
             xQueueSend(xButtonQueue, &evt, 0);
-            xSemaphoreGive(xOpenLimitSem);      /* TC-21 */
+            xSemaphoreGive(xOpenLimitSem);    
         }
         if (curClosedLim && !prevClosedLim) {
             evt = EVT_CLOSED_LIMIT;
             xQueueSend(xButtonQueue, &evt, 0);
-            xSemaphoreGive(xClosedLimitSem);    /* TC-21 */
+            xSemaphoreGive(xClosedLimitSem);   
         }
         if (curObstacle && !prevObstacle) {
             evt = EVT_OBSTACLE;

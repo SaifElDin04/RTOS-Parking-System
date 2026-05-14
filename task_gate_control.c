@@ -69,7 +69,7 @@ void vGateControlTask(void *pvParameters)
             continue;
         }
 
-        // STEP 3 — Conflicting-input detection (TC-15, TC-16).
+        // STEP 3 — Conflicting-input detection 
         bool secConflict = secOpenHeld && secCloseHeld;
         bool drvConflict = drvOpenHeld && drvCloseHeld;
 

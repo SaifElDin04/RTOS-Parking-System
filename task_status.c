@@ -1,11 +1,3 @@
-/*
- * task_status.c — Status Task  (Priority 1 — Low)
- * Smart Parking Garage Gate System
- * TM4C123GH6PM + FreeRTOS
- *
- * Prints the current gate state to the UART console every 2 seconds.
- */
-
 #include "FreeRTOS.h"
 #include "task.h"
 #include "gate_state.h"

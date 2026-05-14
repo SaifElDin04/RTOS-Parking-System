@@ -1,13 +1,5 @@
-/*
- RTOS handle definitions, shared gate state variable,
- and mutex-protected state accessor implementations.
- */
-
 #include "gate_state.h"
 
-/* =========================================================================
- * RTOS HANDLE DEFINITIONS
- * ========================================================================= */
 QueueHandle_t     xButtonQueue;
 SemaphoreHandle_t xOpenLimitSem;
 SemaphoreHandle_t xClosedLimitSem;

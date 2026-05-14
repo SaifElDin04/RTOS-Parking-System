@@ -1,15 +1,3 @@
-/*
- * task_led.c — LED Control Task  (Priority 2 — Medium)
- * Smart Parking Garage Gate System
- * TM4C123GH6PM + FreeRTOS
- *
- * Reads gate state every 50 ms and drives the on-board LEDs:
- *   OPENING   -> Green ON,  Red OFF
- *   REVERSING -> Green ON,  Red OFF  (obstacle reverse shows Green per spec)
- *   CLOSING   -> Red   ON,  Green OFF
- *   all others -> both OFF
- */
-
 #include "FreeRTOS.h"
 #include "task.h"
 #include "gate_state.h"

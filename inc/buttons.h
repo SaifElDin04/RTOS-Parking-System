@@ -1,13 +1,3 @@
-/*
- *   Port E (PE0-PE3) — pull-DOWN, active-HIGH: pressed when bit != 0
- *   Port D (PD0-PD2) — pull-DOWN, active-HIGH: pressed when bit != 0
- *   Port F SW1 (PF4) — pull-UP,   active-LOW:  pressed when bit == 0
- *   Port F SW2 (PF0) — pull-UP,   active-LOW:  pressed when bit == 0
- *
- * All Btn_*() functions return TRUE when the button IS pressed,
- * regardless of the underlying pull direction.
- */
-
 #ifndef BUTTONS_H
 #define BUTTONS_H
 

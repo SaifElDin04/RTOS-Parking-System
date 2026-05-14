@@ -1,7 +1,3 @@
-/*
-Hardware pin mapping and system-wide constants
- */
-
 #ifndef CONFIG_H
 #define CONFIG_H
 
