@@ -1,5 +1,7 @@
 /*
- GPIO port initialisation for Port F, Port E, and Port D
+ * hardware.c — GPIO port initialisation for Port F, Port E, and Port D
+ * Smart Parking Garage Gate System
+ * TM4C123GH6PM + FreeRTOS
  */
 
 #include "hardware.h"
@@ -8,24 +10,54 @@
 
 static void Hardware_Init_PortF(void)
 {
-    /* TODO */
+    SYSCTL_RCGCGPIO_R |= RCGCGPIO_F;
+    while ((SYSCTL_PRGPIO_R & RCGCGPIO_F) == 0) {}
+
+    /* PF0 requires the commit-register unlock sequence */
+    GPIO_PORTF_LOCK_R = 0x4C4F434BU;
+    GPIO_PORTF_CR_R  |= SW2;
+
+    GPIO_PORTF_AMSEL_R &= ~(LED_MASK | SW1 | SW2);
+    GPIO_PORTF_PCTL_R  &= ~0x000FFFFFU;
+    GPIO_PORTF_AFSEL_R &= ~(LED_MASK | SW1 | SW2);
+
+    GPIO_PORTF_DIR_R   |=  LED_MASK;
+    GPIO_PORTF_DIR_R   &= ~(SW1 | SW2);
+    GPIO_PORTF_PUR_R   |=  (SW1 | SW2);
+    GPIO_PORTF_DEN_R   |=  (LED_MASK | SW1 | SW2);
+    GPIO_PORTF_DATA_R  &= ~LED_MASK;
 }
 
 static void Hardware_Init_PortE(void)
 {
-    /* TODO */
-}
+    SYSCTL_RCGCGPIO_R |= RCGCGPIO_E;
+    while ((SYSCTL_PRGPIO_R & RCGCGPIO_E) == 0) {}
 
+    GPIO_PORTE_AMSEL_R &= ~PORTE_BTN_MASK;
+    GPIO_PORTE_PCTL_R  &= ~0x0000FFFFU;
+    GPIO_PORTE_AFSEL_R &= ~PORTE_BTN_MASK;
+    GPIO_PORTE_DIR_R   &= ~PORTE_BTN_MASK;
+    GPIO_PORTE_PDR_R   |=  PORTE_BTN_MASK;
+    GPIO_PORTE_DEN_R   |=  PORTE_BTN_MASK;
+}
 
 static void Hardware_Init_PortD(void)
 {
-    /* TODO */
+    SYSCTL_RCGCGPIO_R |= RCGCGPIO_D;
+    while ((SYSCTL_PRGPIO_R & RCGCGPIO_D) == 0) {}
+
+    /* PD7 is NMI-locked; we only use PD0-PD2, no unlock needed */
+    GPIO_PORTD_AMSEL_R &= ~PORTD_BTN_MASK;
+    GPIO_PORTD_PCTL_R  &= ~0x00000FFFU;
+    GPIO_PORTD_AFSEL_R &= ~PORTD_BTN_MASK;
+    GPIO_PORTD_DIR_R   &= ~PORTD_BTN_MASK;
+    GPIO_PORTD_PDR_R   |=  PORTD_BTN_MASK;
+    GPIO_PORTD_DEN_R   |=  PORTD_BTN_MASK;
 }
 
-/* =========================================================================
- * TODO: Call the three port initialisers above in order.
- * ========================================================================= */
 void Hardware_Init(void)
 {
-    /* TODO */
+    Hardware_Init_PortF();
+    Hardware_Init_PortE();
+    Hardware_Init_PortD();
 }
