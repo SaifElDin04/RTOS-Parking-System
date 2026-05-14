@@ -1,7 +1,9 @@
 /*
- * Responsibilities:
- *   - Every 2 seconds, read the current gate state
- *   - Print a human-readable status string to the UART console
+ * task_status.c — Status Task  (Priority 1 — Low)
+ * Smart Parking Garage Gate System
+ * TM4C123GH6PM + FreeRTOS
+ *
+ * Prints the current gate state to the UART console every 2 seconds.
  */
 
 #include "FreeRTOS.h"
@@ -14,7 +16,24 @@ void vStatusTask(void *pvParameters)
     (void)pvParameters;
     vPrintString("Status Task started\n");
 
-    for (;;)
-    {
+    for (;;) {
+        switch (GateState_Get()) {
+            case GATE_IDLE_CLOSED:
+                vPrintString("[STATUS] IDLE_CLOSED\n");               break;
+            case GATE_IDLE_OPEN:
+                vPrintString("[STATUS] IDLE_OPEN\n");                 break;
+            case GATE_OPENING:
+                vPrintString("[STATUS] OPENING  (Green LED)\n");      break;
+            case GATE_CLOSING:
+                vPrintString("[STATUS] CLOSING  (Red LED)\n");        break;
+            case GATE_STOPPED_MIDWAY:
+                vPrintString("[STATUS] STOPPED_MIDWAY\n");            break;
+            case GATE_REVERSING:
+                vPrintString("[STATUS] REVERSING (Green LED, 500ms)\n"); break;
+            default:
+                vPrintString("[STATUS] UNKNOWN\n");                   break;
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(2000));
     }
 }
