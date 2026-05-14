@@ -1,9 +1,3 @@
-/*
- * hardware.c — GPIO port initialisation for Port F, Port E, and Port D
- * Smart Parking Garage Gate System
- * TM4C123GH6PM + FreeRTOS
- */
-
 #include "hardware.h"
 #include "config.h"
 #include "tm4c123gh6pm.h"
@@ -13,7 +7,6 @@ static void Hardware_Init_PortF(void)
     SYSCTL_RCGCGPIO_R |= RCGCGPIO_F;
     while ((SYSCTL_PRGPIO_R & RCGCGPIO_F) == 0) {}
 
-    /* PF0 requires the commit-register unlock sequence */
     GPIO_PORTF_LOCK_R = 0x4C4F434BU;
     GPIO_PORTF_CR_R  |= SW2;
 
@@ -46,7 +39,6 @@ static void Hardware_Init_PortD(void)
     SYSCTL_RCGCGPIO_R |= RCGCGPIO_D;
     while ((SYSCTL_PRGPIO_R & RCGCGPIO_D) == 0) {}
 
-    /* PD7 is NMI-locked; we only use PD0-PD2, no unlock needed */
     GPIO_PORTD_AMSEL_R &= ~PORTD_BTN_MASK;
     GPIO_PORTD_PCTL_R  &= ~0x00000FFFU;
     GPIO_PORTD_AFSEL_R &= ~PORTD_BTN_MASK;
