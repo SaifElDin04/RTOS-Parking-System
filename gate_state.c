@@ -1,6 +1,6 @@
 /*
-RTOS handle definitions, shared gate state variable,
-and mutex-protected state accessor implementations.
+ RTOS handle definitions, shared gate state variable,
+ and mutex-protected state accessor implementations.
  */
 
 #include "gate_state.h"
@@ -19,22 +19,34 @@ SemaphoreHandle_t xGateStateMutex;
  * ========================================================================= */
 static volatile GateState_t gateState = GATE_IDLE_CLOSED;
 
+/* =========================================================================
+ * GATE STATE ACCESSOR IMPLEMENTATIONS
+ * ========================================================================= */
 
 void GateState_Set(GateState_t newState)
 {
-    /* TODO */
+    xSemaphoreTake(xGateStateMutex, portMAX_DELAY);
+    gateState = newState;
+    xSemaphoreGive(xGateStateMutex);
 }
-
 
 GateState_t GateState_Get(void)
 {
-    /* TODO */
-    return gateState;
+    GateState_t s;
+    xSemaphoreTake(xGateStateMutex, portMAX_DELAY);
+    s = gateState;
+    xSemaphoreGive(xGateStateMutex);
+    return s;
 }
-
 
 bool GateState_CompareAndSet(GateState_t expected, GateState_t newState)
 {
-    /* TODO */
-    return false;
+    bool ok = false;
+    xSemaphoreTake(xGateStateMutex, portMAX_DELAY);
+    if (gateState == expected) {
+        gateState = newState;
+        ok = true;
+    }
+    xSemaphoreGive(xGateStateMutex);
+    return ok;
 }
